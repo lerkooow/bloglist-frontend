@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
-import loginService from './services/login'
+import loginService from './services/login';
+import "./App.css";
+import Notification from "../components/Notification";
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,8 +14,9 @@ const App = () => {
   const [newBlog, setNewBlog] = useState({
     title: "",
     author: "",
-    url: "",
-  }); // Remove the 'user' field from the initial state
+    url: ""
+  });
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -42,7 +46,11 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.error("Login failed:", exception.response.data.error);
+		setMessage({ type: "error", text: "Wrong username or password!" });
+
+		setTimeout(() => {
+			setMessage(null);
+		}, 5000);
     }
   }
 
@@ -51,29 +59,44 @@ const App = () => {
     setUser(null);
   };
 
-  const addBlog = (e) => {
-    e.preventDefault()
-    const blogObject = {
+  const addBlog = async (e) => {
+	e.preventDefault();
+
+	try {
+	  const blogObject = {
 		title: newBlog.title,
 		author: newBlog.author,
 		url: newBlog.url,
-		username: user.username
+		username: user.username,
 	  };
 
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog));
-        setNewBlog({
-          title: "",
-          author: "",
-          url: "",
-        });
-      })
-      .catch(error => {
-        console.error("Failed to create a new blog:", error.response.data.error);
-      });
-  }
+	  const returnedBlog = await blogService.create(blogObject);
+	  setBlogs([...blogs, returnedBlog]);
+	  setNewBlog({
+		title: "",
+		author: "",
+		url: "",
+	  });
+
+	  setMessage({
+		type: "success",
+		text: `A new blog - ${newBlog.title} by ${newBlog.author} added!`,
+	  });
+	  setTimeout(() => {
+		setMessage(null);
+	  }, 5000);
+	} catch (error) {
+	  setMessage({
+		type: "error",
+		text: "Oops! Something went wrong.",
+	  });
+
+	  setTimeout(() => {
+		setMessage(null);
+	  }, 5000);
+	}
+  };
+
 
   const handleBlogChange = (e) => {
     const { name, value } = e.target;
@@ -86,6 +109,7 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
+	  <Notification message={message} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -117,6 +141,7 @@ const App = () => {
       ) : (
         <div>
           <h1>blogs</h1>
+		  <Notification message={message} />
           <p>{user.name} logged in</p>
           <button onClick={handleLogout}>logout</button>
           <div>
