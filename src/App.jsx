@@ -114,6 +114,13 @@ const App = () => {
     });
   }
 
+  const updateBlogs = async () => {
+    const updatedBlogs = await blogService.getAll();
+    setBlogs(updatedBlogs);
+  };
+
+
+
   const loginForm = () => {
     return (
       <LoginForm
@@ -162,7 +169,7 @@ const App = () => {
       {user === null ? (
         loginForm()
       ) : (
-       blogForm()
+        blogForm(updateBlogs)
       )}
     </div>
   );

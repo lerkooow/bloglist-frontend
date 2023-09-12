@@ -17,14 +17,23 @@ const create = async newObject => {
     headers: { Authorization: token },
   }
 
-  const response = await axios.post(baseUrl, newObject, config)
-  return response.data
+  const request = await axios.post(baseUrl, newObject, config)
+  return request.data
 }
 
 const edit = async (likes, blogId) => {
-  const res = await axios.put(baseUrl + "/" + blogId, { likes });
+  const request = await axios.put(baseUrl + "/" + blogId, { likes });
+  return request.data;
+};
+
+const remove = async (blogId) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  const res = await axios.delete(baseUrl + "/" + blogId, config);
   return res.data;
 };
 
-export default { getAll, create, setToken, edit }
+
+export default { getAll, create, setToken, edit, remove }
 

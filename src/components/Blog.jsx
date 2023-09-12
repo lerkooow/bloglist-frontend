@@ -32,6 +32,17 @@ const Blog = ({ blog, user }) => {
     marginTop: 5
   }
 
+  const handleDelete = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog.id);
+        updateBlogs();
+      } catch (error) {
+        console.error("Error deleting blog:", error);
+      }
+    }
+  };
+
   return (
     <div style={blogStyle}>
       <div>
@@ -46,7 +57,10 @@ const Blog = ({ blog, user }) => {
             {blog.url}
           </a>
           <p>likes: {like} <button onClick={handleEdit}>like</button></p>
-          <p>{user.name}</p>
+          <p>{blog.user.name}</p>
+          {user.username === blog.user.username && (
+          <button onClick={handleDelete}>delete</button>
+          )}
         </div>
       )}
     </div>
