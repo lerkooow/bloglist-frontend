@@ -9,6 +9,7 @@ import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import Blog from "./components/Blog";
+import BlogList from "./components/BlogList";
 
 
 const App = () => {
@@ -151,9 +152,7 @@ const App = () => {
         blogs={blogs}/>
           <button onClick={() => setBlogVisible(false)}>cancel</button>
         </div>
-        {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user}/>
-      ))}
+        <BlogList blogs={blogs} user={user}/>
       </div>
     )
   }
