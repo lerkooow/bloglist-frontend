@@ -135,8 +135,7 @@ const App = () => {
         <h1>blogs</h1>
         <Notification message={message} />
        <div className="logout">
-        <p>{user.name} logged in</p>
-        <button onClick={handleLogout}>logout</button>
+        <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
        </div>
         <div style={hideWhenVisible}>
           <button onClick={() => setBlogVisible(true)}>new note</button>
@@ -153,7 +152,7 @@ const App = () => {
           <button onClick={() => setBlogVisible(false)}>cancel</button>
         </div>
         {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog}/>
       ))}
       </div>
     )
