@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import blogService from "../services/blogs";
 
 const Blog = ({ blog, user }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [like, setLike] = useState(0);
+
+  useEffect(() => {
+    setLike(blog.likes);
+  }, [blog.likes]);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
+  };
+
+  const handleEdit = async () => {
+    try {
+      const editedBlog = await blogService.edit(like + 1, blog.id);
+      setLike(editedBlog.likes);
+    } catch (error) {
+      console.error("Error editing blog:", error);
+    }
   };
 
   const blogStyle = {
@@ -27,8 +42,10 @@ const Blog = ({ blog, user }) => {
       </div>
       {showDetails && (
         <div>
-          <p>{blog.url}</p>
-          <p>likes: {blog.likes} <button>like</button></p>
+          <a href={blog.url} target="_blank" rel="noopener noreferrer">
+            {blog.url}
+          </a>
+          <p>likes: {like} <button onClick={handleEdit}>like</button></p>
           <p>{user.name}</p>
         </div>
       )}
