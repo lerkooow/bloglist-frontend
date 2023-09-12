@@ -20,3 +20,8 @@
 .success {
 	color: green;
 }
+
+.logout {
+	display: flex;
+	align-items: center;
+}
