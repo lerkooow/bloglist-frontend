@@ -20,6 +20,8 @@
 # Testing React apps
 13.09.2023  
 5.13: Blog list tests, step1  
+5.14: Blog list tests, step2  
+
 
 
 

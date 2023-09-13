@@ -52,13 +52,13 @@ const Blog = ({ blog, user }) => {
         </button>
       </div>
       {showDetails && (
-        <div>
+         <div className="url_likes">
           <a href={blog.url} target="_blank" rel="noopener noreferrer">
             {blog.url}
-          </a>
+            </a>
           <p>likes: {like} <button onClick={handleEdit}>like</button></p>
-          <p>{blog.user.name}</p>
-          {user.username === blog.user.username && (
+          <p>{blog.user?.name}</p>
+          {user?.username === blog.user?.username && (
           <button onClick={handleDelete}>delete</button>
           )}
         </div>
