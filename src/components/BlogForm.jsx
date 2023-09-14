@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+
+
 const BlogForm = ({ addBlog, newBlog, handleBlogChange, setLoginVisible }) => {
   return (
       <div>
@@ -24,7 +26,7 @@ const BlogForm = ({ addBlog, newBlog, handleBlogChange, setLoginVisible }) => {
 };
 
 BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired
+  addBlog: PropTypes.func.isRequired
 };
 
 

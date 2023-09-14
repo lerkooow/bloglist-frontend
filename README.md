@@ -24,6 +24,8 @@
 
 14.09.2023  
 5.15: Blog list tests, step3  
+5.16: Blog list tests, step4  
+
 
 
 

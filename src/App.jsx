@@ -143,7 +143,7 @@ const App = () => {
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
        </div>
         <div style={hideWhenVisible}>
-          <button onClick={() => setBlogVisible(true)}>new note</button>
+          <button onClick={() => setBlogVisible(true)}>new blog</button>
         </div>
         <div style={showWhenVisible}>
         <BlogForm
