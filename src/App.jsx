@@ -118,8 +118,6 @@ const App = () => {
     setBlogs(updatedBlogs);
   };
 
-
-
   const loginForm = () => {
     return (
       <LoginForm
@@ -155,6 +153,7 @@ const App = () => {
         newBlog={newBlog}
         handleBlogChange={handleBlogChange}
         setLoginVisible={setBlogVisible}
+        createBlog={addBlog}
         blogs={blogs}/>
           <button onClick={() => setBlogVisible(false)}>cancel</button>
         </div>
