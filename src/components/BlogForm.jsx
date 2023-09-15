@@ -19,7 +19,7 @@ const BlogForm = ({ addBlog, newBlog, handleBlogChange, setLoginVisible }) => {
             url:
             <input name="url" type="text" value={newBlog?.url} onChange={handleBlogChange} />
           </div>
-          <button type="submit" onClick={() => setLoginVisible(false)}>create</button>
+          <button id="create-button" type="submit" onClick={() => setLoginVisible(false)}>create</button>
         </form>
       </div>
   );
