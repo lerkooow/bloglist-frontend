@@ -49,7 +49,7 @@ const Blog = ({ blog, user, mockHandler }) => {
     <div style={blogStyle}>
       <div className="title_author">
         {blog?.title} {blog?.author}
-        <button onClick={toggleDetails}>
+        <button id="show_hide-button" onClick={toggleDetails}>
           {showDetails ? "hide" : "show"}
         </button>
       </div>
