@@ -27,6 +27,11 @@
 5.16: Blog list tests, step4  
 
 
+# End to end testing  
+15.09.2023  
+5.17: bloglist end to end testing, step1  
+
+
 
 
 
