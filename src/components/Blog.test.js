@@ -38,13 +38,18 @@ describe("<Blog />", () => {
             title: 'Test Blog',
             author: 'Test Author',
             url: 'https://example.com',
-            likes: 0
+            likes: 0,
+            user: { name: 'Test User', username: 'testuser' },
+        };
+
+        const user = {
+            username: 'testuser',
         };
 
         const mockHandler = jest.fn();
 
         const { getByText } = render(
-            <Blog blog={blog} mockHandler={mockHandler} />
+            <Blog blog={blog} user={user} mockHandler={mockHandler} />
         );
 
         const showButton = getByText('show');
@@ -54,6 +59,7 @@ describe("<Blog />", () => {
 
         fireEvent.click(likeButton);
         fireEvent.click(likeButton);
+
 
         setTimeout(() => {
             expect(mockHandler.mock.calls).toHaveLength(2);

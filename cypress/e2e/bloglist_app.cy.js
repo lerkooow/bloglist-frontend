@@ -1,12 +1,13 @@
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
+    cy.request('POST', 'http://localhost:3003/api/users',
+      {
+        username: 'hellas',
+        password: '12345',
+        name: 'Arto Hellas'
+      })
 
-    cy.request('POST', 'http://localhost:3003/api/users', {
-      username: 'hellas',
-      password: '12345',
-      name: 'Arto Hellas'
-    })
     cy.visit('http://localhost:5173')
   })
 
@@ -75,7 +76,38 @@ describe('Blog app', function () {
 
       cy.get('@blogItem').contains('like').click()
 
+      cy.contains('Arto Hellas')
+      cy.get('#delete-button')
+
+
       cy.get('@blogItem').contains('likes: 1')
+    })
+  })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.get('input[name="username"]').type('hellas')
+      cy.get('input[name="password"]').type('12345')
+      cy.get('button').click()
+    })
+
+    it('A blog can be deleted', function () {
+      cy.contains('new blog').click()
+      cy.get('input[name="title"]').type('Test')
+      cy.get('input[name="author"]').type('Test Test')
+      cy.get('input[name="url"]').type('https://test.com')
+      cy.get('#create-button').click()
+      cy.contains('A new blog - Test by Test Test added!')
+
+      cy.get('#show_hide-button').click()
+
+      cy.get('.title_author').contains('Test Test').parent().as('blogItem')
+
+      cy.get('@blogItem').contains('delete').click()
+
+      cy.wait(5000);
+      cy.contains('Test Test').should('not.exist');
+
     })
   })
 

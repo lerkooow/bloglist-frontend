@@ -67,43 +67,42 @@ const App = () => {
   };
 
   const addBlog = async (e) => {
-	e.preventDefault();
+    e.preventDefault();
 
-	try {
-	  const blogObject = {
-		title: newBlog.title,
-		author: newBlog.author,
-		url: newBlog.url,
-		username: user.username,
-	  };
+    try {
+      const blogObject = {
+        title: newBlog.title,
+        author: newBlog.author,
+        url: newBlog.url,
+        username: user.username,
+      };
 
-	  const returnedBlog = await blogService.create(blogObject);
-	  setBlogs([...blogs, returnedBlog]);
-	  setNewBlog({
-		title: "",
-		author: "",
-		url: "",
-	  });
+      const returnedBlog = await blogService.create(blogObject);
 
-	  setMessage({
-		type: "success",
-		text: `A new blog - ${newBlog.title} by ${newBlog.author} added!`,
-	  });
-	  setTimeout(() => {
-		setMessage(null);
-	  }, 5000);
-	} catch (error) {
-	  setMessage({
-		type: "error",
-		text: "Oops! Something went wrong.",
-	  });
+      setBlogs([...blogs, { ...returnedBlog, user }]);
 
-	  setTimeout(() => {
-		setMessage(null);
-	  }, 5000);
-	}
+      setNewBlog({
+        title: "",
+        author: "",
+        url: "",
+      });
+
+      setMessage({
+        type: "success",
+        text: `A new blog - ${newBlog.title} by ${newBlog.author} added!`,
+      });
+
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: "Oops! Something went wrong.",
+      });
+
+    }
   };
-
 
   const handleBlogChange = (e) => {
     const { name, value } = e.target;
@@ -116,6 +115,16 @@ const App = () => {
   const updateBlogs = async () => {
     const updatedBlogs = await blogService.getAll();
     setBlogs(updatedBlogs);
+  };
+
+  const removeBlog = async (blogId) => {
+    try {
+      await blogService.remove(blogId);
+      // Обновите состояние blogs после успешного удаления блога
+      setBlogs(blogs.filter((blog) => blog.id !== blogId));
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+    }
   };
 
   const loginForm = () => {
@@ -157,7 +166,7 @@ const App = () => {
         blogs={blogs}/>
           <button onClick={() => setBlogVisible(false)}>cancel</button>
         </div>
-        <BlogList blogs={blogs} user={user}/>
+        <BlogList blogs={blogs} user={user} removeBlog={removeBlog}/>
       </div>
     )
   }

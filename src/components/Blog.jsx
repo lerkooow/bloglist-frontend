@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, user, mockHandler }) => {
+const Blog = ({ blog, user, mockHandler, removeBlog }) => {
 
   const [showDetails, setShowDetails] = useState(false);
   const [like, setLike] = useState(0);
+  console.log("🚀 ~ file: Blog.jsx:8 ~ Blog ~ blog.user.name:", blog.user)
 
   useEffect(() => {
     setLike(blog?.likes);
-  }, [blog?.likes]);
+  }, [blog?.likes, blog.user]);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -19,6 +20,7 @@ const Blog = ({ blog, user, mockHandler }) => {
       const editedBlog = await blogService.edit(like + 1, blog.id);
       setLike(editedBlog.likes);
       mockHandler(blog);
+      mockHandler(user);
     } catch (error) {
       console.error("Error editing blog:", error);
     }
@@ -37,8 +39,7 @@ const Blog = ({ blog, user, mockHandler }) => {
   const handleDelete = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       try {
-        await blogService.remove(blog.id);
-        updateBlogs();
+        await removeBlog(blog.id); // Вызов функции для удаления блога из App
       } catch (error) {
         console.error("Error deleting blog:", error);
       }
@@ -46,7 +47,7 @@ const Blog = ({ blog, user, mockHandler }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} id="blog">
       <div className="title_author">
         {blog?.title} {blog?.author}
         <button id="show_hide-button" onClick={toggleDetails}>
@@ -63,9 +64,9 @@ const Blog = ({ blog, user, mockHandler }) => {
             <button onClick={handleEdit}>like</button></p>
           </div>
           <div className="delete">
-            <p>{blog.user?.name}</p>
+            <p id="blog-user-name">{blog.user.name}</p>
             {user?.username === blog.user?.username && (
-            <button onClick={handleDelete}>delete</button>)}
+            <button id="delete-button" onClick={handleDelete}>delete</button>)}
             </div>
          </div>
       )}
