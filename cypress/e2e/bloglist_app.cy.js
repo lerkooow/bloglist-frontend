@@ -1,12 +1,21 @@
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    cy.request('POST', 'http://localhost:3003/api/users',
-      {
-        username: 'hellas',
-        password: '12345',
-        name: 'Arto Hellas'
-      })
+
+    const user1 = {
+      name: 'Arto Hellas',
+      username: 'hellas',
+      password: '12345'
+    }
+
+    const user2 = {
+      name: 'Matti Luukkainen',
+      username: 'mluukkai',
+      password: 'salainen'
+    }
+    cy.request('POST', 'http://localhost:3003/api/users', user1)
+    cy.request('POST', 'http://localhost:3003/api/users', user2)
+
 
     cy.visit('http://localhost:5173')
   })
@@ -109,6 +118,35 @@ describe('Blog app', function () {
       cy.contains('Test Test').should('not.exist');
 
     })
-  })
 
+    it('A blog cannot be deleted by a user who is not the creator', function () {
+      cy.contains('new blog').click()
+      cy.get('input[name="title"]').type('Test1')
+      cy.get('input[name="author"]').type('Test Test1')
+      cy.get('input[name="url"]').type('https://test1.com')
+      cy.get('#create-button').click()
+      cy.contains('A new blog - Test1 by Test Test1 added!')
+      cy.wait(5000);
+      cy.contains('logout').click()
+
+      cy.get('input[name="username"]').type('mluukkai')
+      cy.get('input[name="password"]').type('salainen')
+      cy.get('button').click()
+
+      cy.contains('new blog').click()
+      cy.get('input[name="title"]').type('Test2')
+      cy.get('input[name="author"]').type('Test Test2')
+      cy.get('input[name="url"]').type('https://test2.com')
+      cy.get('#create-button').click()
+      cy.contains('A new blog - Test2 by Test Test2 added!')
+
+
+      cy.get('#show_hide-button').click()
+
+      cy.get('.title_author').contains('Test Test1').parent().as('blogItem')
+
+      cy.get('@blogItem').contains('delete').should('not.exist')
+    })
+
+  })
 })

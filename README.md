@@ -36,6 +36,7 @@
 
 18.09.2023  
 5.21: bloglist end to end testing, step5  
+5.22: bloglist end to end testing, step6  
 
 
 
