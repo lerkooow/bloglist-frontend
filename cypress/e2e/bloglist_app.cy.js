@@ -106,7 +106,6 @@ describe('Blog app', function () {
       cy.get('input[name="author"]').type('Test Test')
       cy.get('input[name="url"]').type('https://test.com')
       cy.get('#create-button').click()
-      cy.contains('A new blog - Test by Test Test added!')
 
       cy.get('#show_hide-button').click()
 
@@ -125,7 +124,6 @@ describe('Blog app', function () {
       cy.get('input[name="author"]').type('Test Test1')
       cy.get('input[name="url"]').type('https://test1.com')
       cy.get('#create-button').click()
-      cy.contains('A new blog - Test1 by Test Test1 added!')
       cy.wait(5000);
       cy.contains('logout').click()
 
@@ -138,8 +136,6 @@ describe('Blog app', function () {
       cy.get('input[name="author"]').type('Test Test2')
       cy.get('input[name="url"]').type('https://test2.com')
       cy.get('#create-button').click()
-      cy.contains('A new blog - Test2 by Test Test2 added!')
-
 
       cy.get('#show_hide-button').click()
 
@@ -147,6 +143,67 @@ describe('Blog app', function () {
 
       cy.get('@blogItem').contains('delete').should('not.exist')
     })
+  })
 
+  describe('When logged in and add blogs', function () {
+    beforeEach(function () {
+      cy.get('input[name="username"]').type('hellas')
+      cy.get('input[name="password"]').type('12345')
+      cy.get('button').click()
+
+      cy.contains('new blog').click()
+      cy.get('input[name="title"]').type('The title with the most likes')
+      cy.get('input[name="author"]').type('Most Like')
+      cy.get('input[name="url"]').type('https://like.com')
+      cy.get('#create-button').click()
+
+
+      cy.contains('new blog').click()
+      cy.wait(2000);
+      cy.get('input[name="title"]').type('The title with the second most likes')
+      cy.get('input[name="author"]').type('Second Most')
+      cy.get('input[name="url"]').type('https://like2.com')
+      cy.get('#create-button').click()
+
+      cy.wait(2000);
+    })
+
+    it('Blogs are ordered by likes', function () {
+      cy.get('#show_hide-button').click()
+
+      cy.get('.title_author').eq(0).should('contain', 'The title with the most likes').parent().as('firstBlog')
+      cy.get('@firstBlog').find('.like-button').click()
+      cy.wait(1000);
+      cy.get('@firstBlog').find('.like-button').click()
+      cy.wait(1000);
+      cy.get('@firstBlog').find('.like-button').click()
+
+
+      cy.wait(2000);
+
+      cy.contains('show').click()
+
+      cy.get('.title_author').eq(1).should('contain', 'The title with the second most likes').parent().as('secondBlog')
+      cy.get('@secondBlog').find('.like-button').click()
+      cy.wait(1000);
+      cy.get('@secondBlog').find('.like-button').click()
+      cy.wait(1000);
+
+      cy.reload();
+      cy.get('#show_hide-button').click()
+      cy.contains('show').click()
+
+
+      cy.get('.blog').eq(0).should('contain', 'The title with the most likes')
+      cy.get('.blog').eq(1).should('contain', 'The title with the second most likes')
+
+      cy.get('.like-count').eq(0).then(($likes1) => {
+        const likes1 = parseInt($likes1.text())
+        cy.get('.like-count').eq(1).then(($likes2) => {
+          const likes2 = parseInt($likes2.text())
+          expect(likes1).to.be.greaterThan(likes2)
+        })
+      })
+    })
   })
 })

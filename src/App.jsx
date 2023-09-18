@@ -120,7 +120,6 @@ const App = () => {
   const removeBlog = async (blogId) => {
     try {
       await blogService.remove(blogId);
-      // Обновите состояние blogs после успешного удаления блога
       setBlogs(blogs.filter((blog) => blog.id !== blogId));
     } catch (error) {
       console.error("Error deleting blog:", error);

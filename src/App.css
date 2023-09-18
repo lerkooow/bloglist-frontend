@@ -24,3 +24,7 @@
 p {
 	margin: auto;
 }
+
+.like-count {
+	display: inline;
+}
